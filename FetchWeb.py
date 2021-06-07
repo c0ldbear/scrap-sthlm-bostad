@@ -2,11 +2,19 @@ import aiohttp
 import asyncio
 
 # Global variable
-def getSthlmBostadUrl():
+async def getSthlmBostadUrl():
     return "https://bostad.stockholm.se/Lista/?sort=annonserad-fran-desc"
 
-def main():
-    print(getSthlmBostadUrl())
+async def FetchWeb():
+    url = await getSthlmBostadUrl()
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            rText = await response.text()
+    return rText
+
+async def main():
+    print(await FetchWeb())
 
 if __name__ == "__main__":
-    main()
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())
